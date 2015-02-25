@@ -1,6 +1,6 @@
 # Bash completion for condawrapper.
 #
-#| Copyright (c) 2014 Andrew Dawson
+#| Copyright (c) 2014-2015 Andrew Dawson
 #| 
 #| Permission is hereby granted, free of charge, to any person obtaining
 #| a copy of this software and associated documentation files (the
@@ -110,7 +110,7 @@ __generate_env_list () {
 
 
 #-----------------------------------------------------------------------
-# Completion function for condawrapper's activate function.
+# Generic completion function for condawrapper.
 #
 # Globals:
 #   COMPREPLY
@@ -121,7 +121,7 @@ __generate_env_list () {
 # Returns:
 #   None
 #-----------------------------------------------------------------------
-_activate () {
+__envcomplete () {
   local cur
   local env_list
   COMPREPLY=()
@@ -135,5 +135,7 @@ _activate () {
   return 0
 }
 
-# Register the completion:
-complete -F _activate activate
+
+# Register the completions:
+complete -F __envcomplete activate
+complete -F __envcomplete rmcondaenv

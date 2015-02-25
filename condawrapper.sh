@@ -1,6 +1,6 @@
 # Wrapper for activating and deactivating conda environments.
 #
-#| Copyright (c) 2014 Andrew Dawson
+#| Copyright (c) 2014-2015 Andrew Dawson
 #| 
 #| Permission is hereby granted, free of charge, to any person obtaining
 #| a copy of this software and associated documentation files (the
@@ -205,4 +205,84 @@ deactivate () {
 
   # Return with the exit status of the deactivation command:
   return $status
+}
+
+
+#-----------------------------------------------------------------------
+# Create a new conda environment and activate it.
+#
+# Globals:
+#   CONDAWRAPPER_HOME
+# Arguments:
+#   env_name
+#     Name of the environment.
+#   *conda_create_args
+#     Any extra arguments that will be passed to conda create.
+# Returns:
+#   None
+# Exits:
+#   0 on success, >0 on failure.
+#-----------------------------------------------------------------------
+mkcondaenv () {
+  local env_name
+  local env_dir
+  local status
+  # Store the environment name (first argument) and remove it from the
+  # argument list (so we can use $@ to represent the rest).
+  env_name="$1"
+  shift
+  # Create the environment:
+  conda create -n "$env_name" $@
+  status=$?
+  if [ $status -ne 0 ]; then
+    __err "error: failed to create the conda environment"
+    return $status
+  fi
+  # Create a condawrapper config for the environment:
+  env_dir="$CONDAWRAPPER_HOME/$env_name"
+  if ! mkdir $env_dir; then
+    __err "error: failed to create condawrapper configuration directory: $env_dir"
+    return 1
+  fi
+  # Activate the new environment:
+  if ! activate "$env_name"; then
+    __err "error: failed to activate the new environment '${env_name}'"
+    return 2
+  fi
+  return 0
+}
+
+
+#-----------------------------------------------------------------------
+# Remove a conda environment.
+#
+# Globals:
+#   CONDAWRAPPER_HOME
+# Arguments:
+#   env_name
+#     Name of the environment.
+# Returns:
+#   None
+# Exits:
+#   0 on success, >0 on failure.
+#-----------------------------------------------------------------------
+rmcondaenv () {
+  local env_name
+  local env_dir
+  local status
+  # Store the environment name (first argument):
+  env_name="$1"
+  # Use conda to remove the environment:
+  conda remove -n "$env_name" --all
+  status=$?
+  if [ $status -ne 0 ]; then
+    __err "error: failed to remove the conda environment properly"
+    return $status
+  fi
+  # Remove the condawrapper configuration directory for the environment:
+  env_dir="$CONDAWRAPPER_HOME/$env_name"
+  if [ -d "$env_dir" ]; then
+    rm -rf "$env_dir"
+  fi
+  return 0
 }
