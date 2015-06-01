@@ -14,14 +14,33 @@ Source the `condawrapper.sh` script:
 
 ## Usage
 
-Two commands are provided: `activate` and `deactivate`. The `activate`
-command will activate the specified conda environment:
+Several commands are provided: `activate`, `deactivate`, `mkcondaenv` and
+`rmcondaenv`. The `activate` command will activate the specified conda environment:
 
     $ activate my-env-name
 
 The `deactivate` command deactivates the currently active conda environment:
 
     $ deactivate
+
+The `mkcondaenv` command will create a new conda environment with a given name. Remaining
+arguments are passed to the `conda create` command, and at least one package specification
+must be provided. For example, to create an environment containing just Python 2:
+
+    $ mkcondaenv my-env-name python=2
+
+Any `conda create` options may be passed to `mkcondaenv` after the name of the environment:
+
+    $ mkcondaenv my-env-name -c channel -y python=2 [package_spec...]
+
+The `mkcondaenv` command will automatically create the environment and a condawrapper
+configuration directory for the environment.
+
+A complementary `rmcondaenv` command is also provided. Its function is to completely
+remove a conda environment, including the configuration directory and all its contents:
+
+    $ rmcondaenv my-env-name
+
 
 ### Environment hooks
 
