@@ -100,9 +100,10 @@ Now when the `work` environment is deactivated the environment variable
     
 ```
 
+
 ## Tab completion
 
-The `activate` command supports tab completion in bash, you just need to
+The `activate`  and `rmcondaenv` commands support tab completion in bash, you just need to
 source the file `condawrapper_completion.bash` in your shell:
 
     source condawrapper_completion.bash
