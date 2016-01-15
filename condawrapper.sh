@@ -249,6 +249,7 @@ mkcondaenv () {
     __err "error: failed to activate the new environment '${env_name}'"
     return 2
   fi
+  echo "Activated environment '${env_name}'"
   return 0
 }
 
