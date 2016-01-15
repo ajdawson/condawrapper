@@ -240,7 +240,7 @@ mkcondaenv () {
   fi
   # Create a condawrapper config for the environment:
   env_dir="$CONDAWRAPPER_HOME/$env_name"
-  if ! mkdir $env_dir; then
+  if ! mkdir -p $env_dir; then
     __err "error: failed to create condawrapper configuration directory: $env_dir"
     return 1
   fi
